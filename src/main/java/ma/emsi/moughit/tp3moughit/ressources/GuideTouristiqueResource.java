@@ -15,9 +15,11 @@ public class GuideTouristiqueResource {
     private GuideTouristiqueService guideService;
 
     @GET
-    @Path("lieu/{ville_ou_pays}")
+    @Path("lieu/{ville_ou_pays}/{nombre}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String villeOuPays(@PathParam("ville_ou_pays") String lieu) {
-        return guideService.getGuide(lieu);
+    public String villeOuPays(
+            @PathParam("ville_ou_pays") String lieu,
+            @PathParam("nombre") int nombreEndroits) {
+        return guideService.getGuide(lieu, nombreEndroits);
     }
 }

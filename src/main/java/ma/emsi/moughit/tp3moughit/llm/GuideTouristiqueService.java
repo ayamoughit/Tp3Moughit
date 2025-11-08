@@ -20,24 +20,26 @@ public class GuideTouristiqueService {
         }
 
 
+        String modelName = "gemini-2.5-flash";
 
-        guide = AiServices.builder(GuideTouristique.class).chatLanguageModel(GoogleAiGeminiChatModel.builder()
+
+        guide = AiServices.builder(GuideTouristique.class)
+                .chatLanguageModel(GoogleAiGeminiChatModel.builder()
                         .apiKey(apiKey)
-                        .modelName("gemini-2.5-flash")
+                        .modelName(modelName)
                         .build())
                 .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
                 .build();
     }
 
-    public String getGuide(String lieu) {
+    public String getGuide(String lieu, int nombreEndroits) {
+        int nbPlaces = Math.max(1, nombreEndroits);
+        String prompt = String.format("Lieu demandé : %s%nNombre d'endroits à suggérer : %d", lieu, nbPlaces);
         try {
-            return guide.getGuide(lieu);
+            return guide.getGuide(prompt);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error calling LLM service", e);
-            // Retourner un message d'erreur JSON
             return "{\"error\": \"Failed to get guide from LLM: " + e.getMessage() + "\"}";
         }
     }
 }
-
-
